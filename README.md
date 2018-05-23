@@ -8,18 +8,18 @@ Monitor system:
 
 Reference: 
     #Public IP
-    VIP1(Web app):      192.168.56.10\n
-    VIP2(Monitor app):  192.168.56.11
-    #Privite IP
-    centos.gateway.master:  10.0.2.11
-    centos.gateway.backup:  10.0.2.13
+    VIP1(Web app):      192.168.56.10 <br />
+    VIP2(Monitor app):  192.168.56.11 <br />
+    #Privite IP <br />
+    centos.gateway.master:  10.0.2.11 <br />
+    centos.gateway.backup:  10.0.2.13 <br />
     #
-    ubuntu.application.1:   10.0.2.4
-    ubuntu.application.2:   10.0.2.9
-    ubutnu.motitor:         10.0.2.12
+    ubuntu.application.1:   10.0.2.4 <br />
+    ubuntu.application.2:   10.0.2.9 <br />
+    ubutnu.motitor:         10.0.2.12 <br />
 
 Authentication:
-    stats:      admin:admin
-    nagios:     admin:admin
-    check_mk:   cmkadmin:tanri           
+    stats:      admin:admin <br />
+    nagios:     admin:admin <br />
+    check_mk:   cmkadmin:tanri<br />       
 
