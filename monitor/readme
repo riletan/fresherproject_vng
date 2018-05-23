@@ -1,0 +1,10 @@
+html location
+/var/www/html
+
+apache2.conf
+/etc/apache2
+apache2 root
+/usr/share/apache2
+
+check_mk agent cfg
+/etc/xinetd.d/check_mk
