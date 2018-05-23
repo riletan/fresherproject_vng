@@ -1,0 +1,18 @@
+#!/bin/bash
+VAR="/var/log /tmp"
+TMP="tmp"
+countVAR=$(ls $VAR | wc --lines)
+countTMP=$(ls $tmp | wc --lines)
+
+if [ $countVAR -lt 50 ] ; then
+status=0
+statustxt=OK
+elif [ $countVAR -lt 100 ] ; then
+status=1
+statustxt=WARNING
+else
+status=2
+statustxt=CRITICAL
+fi
+echo "$status FilecountVAR_TMP countVAR=$countVAR|countTMP=$countTMP $statustxt - $countVAR  files in log, $countTMP in tmp"
+
