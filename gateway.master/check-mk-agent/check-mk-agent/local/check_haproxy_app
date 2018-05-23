@@ -1,0 +1,55 @@
+#!/bin/bash
+#author=ri
+
+#Global variables
+############################################
+
+SERVER="app1 app2 monitor" #usage: ./script_name serverName
+declare -a dataPos=("f5" "f6" "f7" "f8" "f9" "f10" "f25" "f18")
+declare -a varName=("Session-Current" "Session-Max" "Session-Limit" "Session-Total" "Bytes-In" "Bytes-Out" "Down-Time" "Status")
+declare -a var=("scur" "smax" "slim" "stot" "bin" "bout" "dwtime" "st")
+length=${#var[@]}
+
+############################################
+
+#Function
+
+##############################################
+
+function getData
+{
+    svName=$1
+    dataPos=$2
+    rawData=$(echo "show stat" | socat unix-connect:/var/run/haproxy.stat stdio | grep "$svName")
+    data="$(cut -d',' -"$dataPos" <<<"$rawData")"
+    echo "$data"
+}
+
+function praseData
+{
+  serverName=$1
+  #read all data from haproxy socket
+  for (( i=0; i<${length}; i++ ));
+  do
+    var[$i]=$(getData $serverName ${dataPos[$i]})
+  done
+
+  if [[ ${var[7]} = "UP" ]]; then
+      status=0
+      statustxt=OK
+  else
+      status=2
+      statustxt=CRITICAL
+  fi
+  #prase varable in check_mk ouput format
+  echo "$status Haproxy_$serverName ${varName[0]}=${var[0]}|${varName[1]}=${var[1]}|${varName[2]}=${var[2]}|${varName[3]}=${var[3]}|${varName[4]}=${var[4]}|${varName[5]}=${var[5]}|${varName[6]}=${var[6]} $statustxt - $serverName is ${var[7]} ; Downtime: ${var[6]}"
+}
+
+#main
+
+for server in $SERVER;
+do 
+  praseData $server
+done
+
+

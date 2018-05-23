@@ -1,0 +1,15 @@
+#!/bin/bash
+errors=$(echo "show errors" | socat unix-connect:/var/run/haproxy.stat stdio)
+count=$(echo "${errors: -1}")
+if [ $count -lt 1 ] ; then
+       	status=0
+        statustxt=OK
+elif [ $count -lt 2 ] ; then
+       	status=1
+        statustxt=WARNING
+else
+       	status=2
+        statustxt=CRITICAL
+fi
+echo "$status Haproxy_total_error count=$count;1;2;0; $statustxt - $errors"
+

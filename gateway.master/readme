@@ -1,0 +1,12 @@
+#Check_mk directory
+/usr/share/check-mk-agent
+/etc/check-mk-agent/mrpe.cfg
+
+#nagios_plugin
+/usr/lib64/nagios/plugins/
+
+#keepalived configure
+/etc/keepalived/keepalived.conf
+
+#haproxy configure 
+/etc/haproxy/haproxy.cfg

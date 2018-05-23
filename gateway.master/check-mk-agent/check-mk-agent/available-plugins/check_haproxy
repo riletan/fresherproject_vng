@@ -1,0 +1,20 @@
+cmd=$(systemctl status haproxy | grep active)
+if [[ $cmd = *"inactive"* ]]; then
+    status=2
+    statustxt=CRITICAL
+    echo "$Haproxy  $statustxt - Haproxy is down"
+    exit 2
+else
+    versions=$(echo "show info" | sudo socat unix-connect:/var/run/haproxy.stat stdio | grep Version)
+    uptime=$(echo "show info" | sudo socat unix-connect:/var/run/haproxy.stat stdio | grep Uptime:)
+    uptime_var="$(cut -d' ' -f3 <<<"$uptime")"
+    pid=$(echo "show info" | sudo socat unix-connect:/var/run/haproxy.stat stdio | grep Pid)
+    status=0
+    statustxt=OK
+    echo "$status Haproxy uptime=$uptime_var; $statustxt - App $versions ; Run on $pid ; $uptime"
+    exit 0
+fi
+
+
+
+
