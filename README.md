@@ -6,7 +6,7 @@ Monitor system: <br />
     nagios core + check_mk raw + pnp4 nagios 
 
 
-Reference: 
+Reference: <br />
     #Public IP <br />
     VIP1(Web app):      192.168.56.10 <br />
     VIP2(Monitor app):  192.168.56.11 <br />
