@@ -8,7 +8,7 @@ Monitor system:
 
 Reference: 
     #Public IP
-    VIP1(Web app):      192.168.56.10
+    VIP1(Web app):      192.168.56.10\n
     VIP2(Monitor app):  192.168.56.11
     #Privite IP
     centos.gateway.master:  10.0.2.11
