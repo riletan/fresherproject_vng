@@ -3,3 +3,5 @@ html location
 
 apache2.conf
 /etc/apache2/apache2.conf
+check_mk agent cfg
+/etc/xinetd.d/check_mk

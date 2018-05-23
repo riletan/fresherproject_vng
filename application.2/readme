@@ -1,3 +1,5 @@
-html location
-
+#html location
 /var/www/html
+
+#check_mk agent cfg
+/etc/xinetd.d/check_mk
