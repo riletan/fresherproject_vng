@@ -1,4 +1,4 @@
-### Fresher Project VNG
+# Fresher Project VNG
 
 Load Balancing + High Availability:
 ```
@@ -24,15 +24,12 @@ ubuntu.application.1:   10.0.2.4
 ubuntu.application.2:   10.0.2.9
 ubutnu.motitor:         10.0.2.12
 ```
-##Authentication
+###  Authentication
 
 
 * stats:      admin:admin
 * nagios:     admin:admin
 * check_mk:   cmkadmin:tanri      
 
-
-
-
-## Authors
+### Authors
 * riletan
