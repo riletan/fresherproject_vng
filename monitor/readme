@@ -8,3 +8,17 @@ apache2 root
 
 check_mk agent cfg
 /etc/xinetd.d/check_mk
+
+nagios
+/usr/local/nagios
+/usr/local/nagios/bin/nagios
+/usr/lib/nagios
+/etc/nagios
+/etc/init.d/nagios
+/run/nagios
+
+
+tar -czf nagios.tar.gz /usr/local/nagios /usr/local/nagios/bin/nagios /usr/lib/nagios /etc/nagios /etc/init.d/nagios /run/nagios
+tar -czf pnp4nagios.tar.gz /usr/local/pnp4nagios /var/lib/apache2/site/enabled_by_admin/pnp4nagios
+tar -czf vng.tar.gz /opt/omd/sites/vng/
+tar -czf 

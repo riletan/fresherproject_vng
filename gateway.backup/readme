@@ -10,3 +10,6 @@
 
 #haproxy configure 
 /etc/haproxy/haproxy.cfg
+
+#Check_mk_gent configure
+/etc/xinetd.d/check-mk-agent
