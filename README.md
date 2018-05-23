@@ -1,25 +1,38 @@
-# fresherproject_vng
-Load Balancing + High Availability:  <br />
-    Haproxy + Keepalived
+### Fresher Project VNG
 
-Monitor system: <br />
-    nagios core + check_mk raw + pnp4 nagios 
+Load Balancing + High Availability:
+```
+Haproxy + Keepalived
+```
+
+Monitor system:
+```
+nagios core + check_mk raw + pnp4 nagios 
+```
+
+### Reference
+```
+Public IP
+VIP1(Web app):      192.168.56.10
+VIP2(Monitor app):  192.168.56.11
+```
+```
+Privite IP
+centos.gateway.master:  10.0.2.11
+centos.gateway.backup:  10.0.2.13
+ubuntu.application.1:   10.0.2.4
+ubuntu.application.2:   10.0.2.9
+ubutnu.motitor:         10.0.2.12
+```
+##Authentication
 
 
-Reference: <br />
-    #Public IP <br />
-    VIP1(Web app):      192.168.56.10 <br />
-    VIP2(Monitor app):  192.168.56.11 <br />
-    #Privite IP <br />
-    centos.gateway.master:  10.0.2.11 <br />
-    centos.gateway.backup:  10.0.2.13 <br />
-    # <br />
-    ubuntu.application.1:   10.0.2.4 <br />
-    ubuntu.application.2:   10.0.2.9 <br />
-    ubutnu.motitor:         10.0.2.12 <br />
+* stats:      admin:admin
+* nagios:     admin:admin
+* check_mk:   cmkadmin:tanri      
 
-Authentication: <br />
-    stats:      admin:admin <br />
-    nagios:     admin:admin <br />
-    check_mk:   cmkadmin:tanri<br />       
 
+
+
+## Authors
+* riletan
