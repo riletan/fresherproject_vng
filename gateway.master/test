@@ -1,0 +1,139 @@
+#!/bin/sh
+#check_haproxy application status
+#
+
+me="$(basename $0)"
+
+usage () {
+cat <<EOF
+Usage: $me [options]
+A nagios plugin that checks haproxy status by rilt  
+Options:
+  --appname, -a  Application Name
+                Check the specific application status.
+  --help, -h     Print this help text.
+EOF
+}
+
+
+## exit statuses recognized by Nagios
+OK=0
+WARNING=1
+CRITICAL=2
+UNKNOWN=3
+
+
+## helper functions
+die () {
+  rc="$1"
+  shift
+  (echo -n "$me: ERROR: ";
+      if [ $# -gt 0 ]; then echo "$@"; else cat; fi) 1>&2
+  exit $rc
+}
+
+warn () {
+  (echo -n "$me: WARNING: ";
+      if [ $# -gt 0 ]; then echo "$@"; else cat; fi) 1>&2
+}
+
+have_command () {
+  type "$1" >/dev/null 2>/dev/null
+}
+
+require_command () {
+  if ! have_command "$1"; then
+    die 1 "Could not find required command '$1' in system PATH. Aborting."
+  fi
+}
+
+is_absolute_path () {
+    expr match "$1" '/' >/dev/null 2>/dev/null
+}
+
+
+## parse command-line
+
+short_opts='ha:'
+long_opts='appname:,help'
+
+# test which `getopt` version is available:
+# - GNU `getopt` will generate no output and exit with status 4
+# - POSIX `getopt` will output `--` and exit with status 0
+getopt -T > /dev/null
+rc=$?
+if [ "$rc" -eq 4 ]; then
+    # GNU getopt
+    args=$(getopt --name "$me" --shell sh -l "$long_opts" -o "$short_opts" -- "$@")
+    if [ $? -ne 0 ]; then
+        die 1 "Type '$me --help' to get usage information."
+    fi
+    # use 'eval' to remove getopt quoting
+    eval set -- $args
+else
+    # old-style getopt, use compatibility syntax
+    args=$(getopt "$short_opts" "$@")
+    if [ $? -ne 0 ]; then
+        die 1 "Type '$me --help' to get usage information."
+    fi
+    set -- $args
+fi
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --appname|-a) appName="$2"; shift ;;
+        --help|-h)    usage; exit 0 ;;
+        --)           shift; break ;;
+    esac
+    shift
+done
+
+#Global variables
+#############################################
+declare -a dataPos=("f5" "f6" "f7" "f8" "f9" "f10" "f25" "f18")
+declare -a varName=("Session-Current" "Session-Max" "Session-Limit" "Session-Total" "Bytes-In" "Bytes-Out" "Down-Time" "Status")
+declare -a var=("scur" "smax" "slim" "stot" "bin" "bout" "dwtime" "st")
+length=${#var[@]}
+
+############################################
+#Function
+##############################################
+
+function getData
+{
+    dataPos=$1
+    rawData=$(echo "show stat" | socat unix-connect:/var/run/haproxy.stat stdio | grep "$appName")
+    data="$(cut -d',' -"$dataPos" <<<"$rawData")"
+    echo "$data"
+}
+
+
+###### main
+
+#Read all data from haproxy socket
+for (( i=0; i<${length}; i++ ));
+do
+	var[$i]=$(getData ${dataPos[$i]})
+	echo "${var[i]}"
+done
+
+
+# RETURN OUTPUT TO NAGIOS
+if [[ ${var[7]} = "UP" ]]; then
+	echo "${varName[0]} is OK;|${varName[0]}=${var[0]}c;1000;1000,0;1000"
+	echo "${varName[1]} is OK;"
+    echo "${varName[2]} is OK;"
+    echo "${varName[3]} is OK;"
+    echo "${varName[4]} is OK;"
+    echo "${varName[5]} is OK;"
+    echo "${varName[6]} is OK;|${varName[1]}=${var[1]}c;1000;1000,0;1000"
+	echo "${varName[2]}=${var[2]}c;1000;1000,0;1000" 
+	echo "${varName[3]}=${var[3]}c;1000;1000,0;1000"
+	echo "${varName[4]}=${var[4]}B;1000000;1000000,0;1000000"
+	echo "${varName[5]}=${var[5]}B;1000000;1000000,0;1000000"
+	echo "${varName[6]}=${var[6]}s;1000;1000,0;1000"
+	exit $OK
+else
+	echo "CRITICAL - Haproxy is down"
+	exit $CRITICAL
+fi

@@ -4,12 +4,12 @@
 #Global variables
 ############################################
 
-SERVER="app1 app2 monitor" #usage: ./script_name serverName
+SERVER=$1 #usage: ./script_name serverName
 declare -a dataPos=("f5" "f6" "f7" "f8" "f9" "f10" "f25" "f18")
 declare -a varName=("Session-Current" "Session-Max" "Session-Limit" "Session-Total" "Bytes-In" "Bytes-Out" "Down-Time" "Status")
 declare -a var=("scur" "smax" "slim" "stot" "bin" "bout" "dwtime" "st")
 length=${#var[@]}
-
+status=3
 ############################################
 
 #Function
@@ -42,14 +42,113 @@ function praseData
       statustxt=CRITICAL
   fi
   #prase varable in check_mk ouput format
-  echo "$status Haproxy_$serverName ${varName[0]}=${var[0]}|${varName[1]}=${var[1]}|${varName[2]}=${var[2]}|${varName[3]}=${var[3]}|${varName[4]}=${var[4]}|${varName[5]}=${var[5]}|${varName[6]}=${var[6]} $statustxt - $serverName is ${var[7]} ; Downtime: ${var[6]}"
+  echo "$serverName is ${var[7]};|${varName[0]}=${var[0]}"
 }
 
 #main
+praseData $serverName
+exit $status
 
-for server in $SERVER;
-do 
-  praseData $server
+
+
+
+
+
+#!/bin/sh
+#check_haproxy application status
+#
+
+me="$(basename $0)"
+
+usage () {
+cat <<EOF
+Usage: $me [options]
+A short description of what this check does should be here,
+but it is not (yet).
+Options:
+  --message, -m  TEXT
+                Exit with OK status and use TEXT as check result message.
+  --help, -h     Print this help text.
+EOF
+}
+
+
+## exit statuses recognized by Nagios
+OK=0
+WARNING=1
+CRITICAL=2
+UNKNOWN=3
+
+
+## helper functions
+die () {
+  rc="$1"
+  shift
+  (echo -n "$me: ERROR: ";
+      if [ $# -gt 0 ]; then echo "$@"; else cat; fi) 1>&2
+  exit $rc
+}
+
+warn () {
+  (echo -n "$me: WARNING: ";
+      if [ $# -gt 0 ]; then echo "$@"; else cat; fi) 1>&2
+}
+
+have_command () {
+  type "$1" >/dev/null 2>/dev/null
+}
+
+require_command () {
+  if ! have_command "$1"; then
+    die 1 "Could not find required command '$1' in system PATH. Aborting."
+  fi
+}
+
+is_absolute_path () {
+    expr match "$1" '/' >/dev/null 2>/dev/null
+}
+
+
+## parse command-line
+
+short_opts='hm:'
+long_opts='message:,help'
+
+# test which `getopt` version is available:
+# - GNU `getopt` will generate no output and exit with status 4
+# - POSIX `getopt` will output `--` and exit with status 0
+getopt -T > /dev/null
+rc=$?
+if [ "$rc" -eq 4 ]; then
+    # GNU getopt
+    args=$(getopt --name "$me" --shell sh -l "$long_opts" -o "$short_opts" -- "$@")
+    if [ $? -ne 0 ]; then
+        die 1 "Type '$me --help' to get usage information."
+    fi
+    # use 'eval' to remove getopt quoting
+    eval set -- $args
+else
+    # old-style getopt, use compatibility syntax
+    args=$(getopt "$short_opts" "$@")
+    if [ $? -ne 0 ]; then
+        die 1 "Type '$me --help' to get usage information."
+    fi
+    set -- $args
+fi
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --message|-m) message="$2"; shift ;;
+        --help|-h)    usage; exit 0 ;;
+        --)           shift; break ;;
+    esac
+    shift
 done
 
 
+## main
+
+# RETURN OUTPUT TO NAGIOS
+# using the example `-m` parameter parsed from commandline
+echo "OK - ${message}"
+exit $OK
