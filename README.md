@@ -8,7 +8,7 @@ Monitor system:
 ```
 nagios core + check_mk raw + pnp4 nagios 
 ```
-Mail client
+Mail client:
 ```
     postfix + gmail
 ```
@@ -31,7 +31,6 @@ ubutnu.motitor:         10.0.2.12
 
 * stats:      admin:admin
 * nagios:     admin:admin
-* check_mk:   cmkadmin:tanri      
-
+* check_mk:   cmkadmin
 ### Authors
 * riletan
