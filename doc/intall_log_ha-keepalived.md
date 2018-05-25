@@ -1,9 +1,9 @@
-#Install Log
+# Haproxy & Keepalived Installation tutorial
 
-Có thể cài đặt keepalived và haproxy từ base repository của centos/unbuntu, tuy nhiên các verison này không phải là phiên bản mới nhất & không thể  thay đổi được config nên tôi chọn cài đặt từ source code. 
-##Haproxy
+Có thể cài đặt keepalived và haproxy từ base repository của centos/unbuntu, tuy nhiên các verison này không phải là phiên bản mới nhất & không thể  custom configure.
+## Haproxy
 
-###Install
+### Install
 1. Tải về  Haproxy bản mới nhất: [haproxy-18.9.tar.gz](http://www.haproxy.org/download/1.8/src/haproxy-1.8.9.tar.gz)
 2. Giải nén source vừa tải về
 3. Chuyển work directory tới thư mục haproxy-1.8.9
@@ -44,8 +44,8 @@ sudo firewall-cmd --permanent --zone=public --add-service=http
 sudo firewall-cmd --permanent --zone=public --add-port=8181/tcp
 sudo firewall-cmd --reload
 ```
-###Configure
-
+### Configure
+LOAD LAYER 4
 Tạo file haproxy.cfg dưới /etc/haproxy/haproxy.cfg
 ```
 sudo nano /etc/haproxy/haproxy.cfg
@@ -90,7 +90,7 @@ listen stats
    server monitor 10.0.2.12:80 check #server monitor
 ```
 
-###Configure Log
+### Configure Log
 
 1. Chỉnh sửa rsyslog config
 ```
@@ -119,9 +119,9 @@ service rsyslog restart
 Như vậy, tất cả các log của haproxy đã được chuyển hướng về file /var/log/haproxy.log
 
 
-##Keepalived
+## Keepalived
 
-###Install
+### Install
 1. Tải về phiên bản mới nhất: [keepalived-1.4.4](http://keepalived.org/software/keepalived-1.4.4.tar.gz) 
 ```
 wget http://keepalived.org/software/keepalived-1.4.4.tar.gz
@@ -152,7 +152,7 @@ sudo cat /var/log/messages | grep Keepalived
 ```
 ```
 ```
-###Configure
+### Configure
 ```
 sudo nano /etc/keepalived/keepalived.conf
 ```
