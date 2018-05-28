@@ -6,4 +6,4 @@ sudo gpt-get update
 sudo apt-get install libsasl2-modules postfix
 ```
 2. 
-[logo]: https://github.com/riletan/fresherproject_vng/blob/master/doc/figure/worked.png "Logo"
+[alt text](https://github.com/riletan/fresherproject_vng/blob/master/doc/figure/worked.png "Logo")
