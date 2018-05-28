@@ -1,4 +1,4 @@
-# Apache, Nagios, Check_mk, pnp4Nagios Installation Tutorial
+# Apache, Nagios, Check_mk Installation Tutorial
 ## Apache
 ```
 sudo apt update
@@ -236,7 +236,64 @@ ufw reload
 ufw enable
 ```
 
-##Check_mk
-###Install
+## Check_mk
+### Trên monitor host
+1. Download [Check_MK Check_MK Raw Edition (CRE) 1.4.0p33](https://mathias-kettner.de/support/1.4.0p33/check-mk-raw-1.4.0p33_0.xenial_amd64.deb) Debian package cho ubuntu 16.04
+2. Cài đặt check_mk
+```
+dpkg -i check-mk-raw-1.4.0p33_0.xenial_amd64.deb
+```
+3. Tạo site monitor vng
+```
+omd create vng
+```
+Tạo site thành công với admin là cmkadmin, password p9QFLMni
+```
+Created new site vng with version 1.4.0p30.cre.
 
+  The site can be started with omd start vng.
+  The default web UI is available at http://ubuntu/monitor/
+
+  The admin user for the web applications is cmkadmin with password: p9QFLMni
+  (It can be changed with 'htpasswd -m ~/etc/htpasswd cmkadmin' as site user.
+)
+  Please do a su - monitor for administration of this site.
+```
+Ta có thể  thay đổi password của cmkadmin bằng lệnh sau: 
+```
+sudo htpasswd -c /opt/omd/sites/vng/etc/htpasswd cmkadmin
+```
+4. Config các host monitor với giao diện đồ  họa với Check_mk WATO
+
+### Trên remote host 
+1. Download check_mk_agent [check-mk-agent_1.2.4p5-2_all.deb](http://mathias-kettner.de/download/check-mk-agent_1.2.4p5-2_all.deb)
+```
+dkpg -i check-mk-agent_1.2.4p5-2_all.deb
+
+```
+2. Config check agent */etc/xinetd.d/check_mk*
+```
+nano /etc/xinetd.d/check_mk
+```
+* Chỉnh sử hai dòng trong file config như dưới đây:
+```
+    only_from       = 127.0.0.1 monitor_host_ip
+	disable		= no
+```
+* Lưu lại và restart xinetd service
+```
+/etc/init.d/xinetd restart
+```
+* Configure firewall
+* Trên centos 7/ RHEL 7
+```
+firewall-cmd --permanent --add-port=6556/tcp
+firewall-cmd --reload
+```
+* Trên ubuntu 16.04/ Debian 9
+```
+ufw allow 6556/tcp
+ufw reload
+ufw enable
+```
 
