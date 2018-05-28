@@ -284,7 +284,7 @@ nano /etc/xinetd.d/check_mk
 ```
 /etc/init.d/xinetd restart
 ```
-* Configure firewall
+3. Configure firewall
 * Trên centos 7/ RHEL 7
 ```
 firewall-cmd --permanent --add-port=6556/tcp
