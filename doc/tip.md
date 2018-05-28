@@ -63,3 +63,21 @@ Master rounter sẽ gửi gói tin thông báo trạng thái active của nó ch
 3.  virtual_rounter_id: specify to which VRRP router id the instance belongs: Phân biệt giữ nhiều vrrp instance
 4.  advert_int: specify the advertisement interval in seconds (set to 1) 
 5. interface: specify the network interface for the instance to run on 
+
+
+## Check_mk 
+Check_MK uses Nagios core for theses tasks:
+
+* Manage Check results
+* Triggering of alarms
+* Manage planned downtimes
+* Test host availability
+* Detect network failures
+
+Nagios uses nrpe to connect to clients and performs checks. This means that some Nagios plugins have to sit on the client and return results from when they are called.
+
+Check_MK needs both: client side monitoring agent and server side monitoring system. The server side monitoring system calls the agent of the host and passes the check results to the monitoring core (usually Nagios but there is also an new core just for Check_MK). What makes Check_MK different from other passive Checks (like NRPE) is that the results for all checks is send to the monitoring system in one package.
+
+Check-mk sử dụng check-mk-agent để kết nối clients với server & check. Ở client sẽ có check-mk-agent service nằm chờ và return kết quả khi được gọi. tất cả kq sẽ được đóng lại thành một gói duy nhất rồi gửi về cho server check-mk. 
+
+
