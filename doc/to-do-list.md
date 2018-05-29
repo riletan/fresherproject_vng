@@ -5,3 +5,4 @@
 * Custom log, log rotation, log config
 * Viết lại tutorial. 
 * Check-mk hoạt động như thế nào.
+* Webpool prefix

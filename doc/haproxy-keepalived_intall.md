@@ -1,7 +1,17 @@
 # Haproxy & Keepalived Installation tutorial
 
 Có thể cài đặt keepalived và haproxy từ base repository của centos/unbuntu, tuy nhiên các verison này không phải là phiên bản mới nhất & không thể  custom configure.
+## Overview
+* Network: Nat & Internal Network/ Host Only
+* Gateway : 2 server Centos. 2 Interface. Service: Haproxy, Keepalived:  cân bằng tải và high availability.
+* Application: 2 server Ubuntu. 1 Interface private. Service: Apache: web service hiển thị nội dung
+
+![alt text](/doc/figure/system_overview.png)
+
 ## Haproxy
+* Load balancer (LB) Cân Bằng Tải là việc phân bố đồng đều lưu lượng truy cập giữa hai hay nhiều các máy chủ có cùng chức năng trong cùng một hệ thống.
+* LB là 1 trong những thành phần quan trọng nhất của hệ thống monitor.
+* LB là vị trí duy nhất giúp người quản trị nhìn được các service phía sau chúng.
 
 ### Install
 1. Tải về  Haproxy bản mới nhất: [haproxy-18.9.tar.gz](http://www.haproxy.org/download/1.8/src/haproxy-1.8.9.tar.gz)
