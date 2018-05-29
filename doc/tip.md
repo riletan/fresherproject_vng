@@ -80,4 +80,5 @@ Check_MK needs both: client side monitoring agent and server side monitoring sys
 
 Check-mk sử dụng check-mk-agent để kết nối clients với server & check. Ở client sẽ có check-mk-agent service nằm chờ và return kết quả khi được gọi. tất cả kq sẽ được đóng lại thành một gói duy nhất rồi gửi về cho server check-mk. 
 
+$? Là biến môi trường được sử dụng để  lưu trữ exit code của câu lệnh được thực thi trước đó 
 
