@@ -208,5 +208,16 @@ vrrp_instance VI_1 {
 }
 
 ```
+### Confiure Firewall
+
+Mặc định các gói tin multicast sẽ bị chặn bở firewall trên centos 7 vì vậy ta cần phải configure firewall cho phép các gói tin đi qua.
+
+```
+firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" destination address="224.0.0.18" protocol value="ip" accept' --permanent
+firewall-cmd --reload
+```
+
+
+
 
 
