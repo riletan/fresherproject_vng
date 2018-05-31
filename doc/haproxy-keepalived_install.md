@@ -184,7 +184,7 @@ global_defs {
    vrrp_gna_interval 0
 }
 vrrp_script chk_haproxy {
- script "killall -0 haproxy" #health check tren tat ca cac server co trong group
+ script "/etc/keepalived/health_check_haproxy.sh" #health check haproxy
  interval 2 #2s #Dinh ki`.
  weight 4 # 
 }
