@@ -208,6 +208,35 @@ vrrp_instance VI_1 {
 }
 
 ```
+Tạo script health_check_haproxy.sh có nội dung như sau: 
+```
+_isRunning() {
+         ps -o comm= -C "$1" 2>/dev/null | grep -x "$1" >/dev/null 2>&1
+
+}
+
+if _isRunning haproxy; then
+    exit 0
+else
+    exit 1
+fi
+```
+
+Mặt định SELinux ngăn custom script thực thi một cách tự động,  ta sẽ thêm ngoại lệ cho script như sau: 
+```
+chcon -t keepalived_unconfined_script_exec_t /etc/keepalived/heath_check_haproxy.sh
+```
+
+Nếu như không thể restart haproxy thì thêm dòng sau vào cuối file /etc/sysctl.conf
+```
+net.ipv4.ip_nonlocal_bind=1
+```
+Sau đó thực thi lệnh sau: 
+```
+sysctl -p
+```
+Restảrt Haproxy
+
 ### Confiure Firewall
 
 Mặc định các gói tin multicast sẽ bị chặn bở firewall trên centos 7 vì vậy ta cần phải configure firewall cho phép các gói tin đi qua.
