@@ -82,3 +82,9 @@ Check-mk sử dụng check-mk-agent để kết nối clients với server & che
 
 $? Là biến môi trường được sử dụng để  lưu trữ exit code của câu lệnh được thực thi trước đó 
 
+
+git checkout branch : change working branch
+git add .
+git commit -m "message"
+git push 
+git push origin fromBranch1:toBranch2
