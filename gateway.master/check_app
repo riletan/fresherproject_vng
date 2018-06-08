@@ -116,6 +116,11 @@ do
 	var[$i]=$(getData ${dataPos[$i]})
 done
 
+for (( i=0; i<${length}; i++ ));
+do
+	echo ${var[$i]}
+done
+
 
 # RETURN OUTPUT TO NAGIOS
 if [[ ${var[7]} = "UP" ]]; then

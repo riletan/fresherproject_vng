@@ -5,3 +5,4 @@
 * Log config
 * Viết lại tutorial. 
 * Check-mk hoạt động như thế nào.
+* Socket, Port TCP , Process.
