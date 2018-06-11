@@ -88,3 +88,5 @@ git add .
 git commit -m "message"
 git push 
 git push origin fromBranch1:toBranch2
+
+git config credential.helper store
