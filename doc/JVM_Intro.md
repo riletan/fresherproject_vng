@@ -114,6 +114,59 @@ Person person = new Person ();
 
 JRE cung cấp môi trường runtime, nó là một triển khai của JVM. JRE bao gồm tập các thư viện và các file khác mà JVM sử dụng trong runtime. Trình triển khai của JVM cũng được công bố bởi các công ty khác ngoài Sun Micro Systems
 
-### JDK Bao gồm JRE và Các Development Tool khác.
+### JDK (Java Development Kit) Bao gồm JRE và Các Development Tool khác.
 
+## JVM Monitoring 
 
+Nhiều ứng dụng Java sau một thời gian sử dụng, số lượng người dùng và lượng dữ liệu gia tăng cũng làm thay đổi hiệu năng của ứng dụng, nguyên hiểm hơn có thể dẫn đến ứng dụng bị chết hoặc unresponsive.\
+Vì vậy, việc theo dỗi các thông số của jvm trong suốt thời gian vận hành hệ thống là rất quan trọng để có thể kịp thời điểu chỉnh hoặc sửa chữa nếu có sự cố xảy ra.
+
+Một vài thông số  quan trọng của jvm cần theo dõi như: 
+* Memomry
+* Garbage Collection (Qua trình thu dọn bộ nhớ).
+* Hoạt động biên dịch (JIT Compilation).
+* Class loading.
+Trong đó, các thông số về Memory và GC là quan trọng nhất, phải ánh nhiều nhất về  hoạt động và hiệu năng của JVM.
+
+### 1. Memory
+Bao gồm: 
+* Heap Memory
+* Non-Heap Memory
+* Memory Pool
+    * PS Old gen
+    * PS Eden Space
+    * PS Survivor Space
+    * Metaspace
+    * Code cache
+    * Compressed Class Space
+
+### 2. Garbage Collection Monitoring 
+Các thông số cần quan tâm về GC
+* Kích thước của Java Heap
+* Kích thước của vùng young generation, old generation và permanent generation.
+* Thời gian và tần suất thực hiện và dung lượng vùng nhớ thu hồi được từ minor garbage collection.
+* Thời gian và tần suất thực hiện và dung lượng vùng nhớ thu hồi được từ major garbage collection.
+* Sự chiếm giữ vùng nhớ của young generation, old generation và permanent generation trước và sau khi thực hiện garbage collection.
+//TODO: Giải thích 
+
+### 3. Classloading
+Bao gồm: 
+* Current classes loaded 
+* Total classes loaded
+* Total classes unloaded
+
+### Các công cụ theo dõi JVM được tích hợp trong bộ JDK.
+1. **jps**: [Java Virtual Machine Process Status Tool](https://docs.oracle.com/javase/7/docs/technotes/tools/share/jps.html)\
+**jps** có công dụng là tìm và hiển thị pid của tất cả các tiến trình java đang ở trạng thái running trong hệ thống.\
+![alt text](/doc/figure/jps.png) 
+2. **jstat**: [Java Virtual Machine Statistics Monitoring Tool](https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html)
+3. **jconsole**: Jconsole là phần mềm quản lí và theo dõi jvm có giao diện đồ họa. Jconsole hỗ trợ cả JMX lẫn MBean, nhờ đó Jconsole có thể theo dỗi nhiều jvm cùng một lúc. Hơn nữa, nhiều Session của Jconsole có thể cùng theo dõi một session của một JVM. Các thông số Jconsole có thể theo dõi:
+* Memory usage by memory pool/spaces
+* Garbage collection
+* JIT compilation
+* Class loading
+* Threading and logging
+* Thread monitor contention
+* Thread monitor contention
+
+![alt text](/doc/figure/jconsole.png)
