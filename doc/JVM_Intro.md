@@ -126,6 +126,7 @@ Một vài thông số  quan trọng của jvm cần theo dõi như:
 * Garbage Collection (Qua trình thu dọn bộ nhớ).
 * Hoạt động biên dịch (JIT Compilation).
 * Class loading.
+
 Trong đó, các thông số về Memory và GC là quan trọng nhất, phải ánh nhiều nhất về  hoạt động và hiệu năng của JVM.
 
 ### 1. Memory
@@ -141,13 +142,32 @@ Bao gồm:
     * Compressed Class Space
 
 ### 2. Garbage Collection Monitoring 
-Các thông số cần quan tâm về GC
+#### Các khái niệm cơ bản.
+**Garbage Collection** là quá trình xác định và loại bỏ các Obj không được sử dụng (unreferenced) khỏi bộ nhớ heap. 
+**Garbage collectioner** là chương trình chạy nền, nó theo dõi toàn bộ các Obj trong bộ nhớ heap và tìm ra những Obj không được tham chiếu đến nữa và loại bỏ chúng đi.\
+Quá trình GG bao gồm 3 bước cơ bản: 
+1. **Marking**: Đánh dấu những Obj còn sử dụng & không còn sử dụng.
+2. **Normal deleteting**: GC sẽ xóa các Obj không còn sử dụng nữa.
+3. **Deletion with compacting**: Những obj còn được sử dụng được gom lại gần nhau để làm tăng hiệu suất sử dụng bộ nhớ trống cấp phát cho các Obj mới.
+
+Để thực hiện việc tự động giải phóng các Obj không được sử  dụng, Bộ nhớ Heap được chia thành các phần nhỏ như dưới đây: 
+
+![alt text](/doc/figure/gc1.png)
+
+**Young Generation** là nơi chứa toàn bộ Obj khi mới được khởi tạo, nó được chia thành 3 vùng nhỏ hơn là Eden và 2 vùng Survivor S0, S1. Khi YG đầy thì Minor GC hoạt động.\
+Ban đầu thì mọi Obj mới tạo sẽ được chứa ở Eden. Khi Eden đầy thì Minor GC chuyển chúng sang vùng S0,S1.\
+Minor GC liên tục theo dõi các Object ở S0, S1. Sau nhiều chu kỳ quét mà Object vẫn còn được sử dùng thì chúng mới được chuyển sang vùng nhớ Old generation. Old generation được quản lý bởi Major GC.\
+Mô hình vùng nhớ Heap có vùng Perm (Permanent Generation), Perm không phải một phần của Heap. Perm không chứa Object, nó chứa metadata của JVM như các thư viện Java SE, mô tả các class và các method của ứng dụng.
+
+![alt text](/doc/figure/gc2.png)
+
+
+**Các thông số cần quan tâm về GC**
 * Kích thước của Java Heap
 * Kích thước của vùng young generation, old generation và permanent generation.
 * Thời gian và tần suất thực hiện và dung lượng vùng nhớ thu hồi được từ minor garbage collection.
 * Thời gian và tần suất thực hiện và dung lượng vùng nhớ thu hồi được từ major garbage collection.
 * Sự chiếm giữ vùng nhớ của young generation, old generation và permanent generation trước và sau khi thực hiện garbage collection.
-//TODO: Giải thích 
 
 ### 3. Classloading
 Bao gồm: 
@@ -160,6 +180,68 @@ Bao gồm:
 **jps** có công dụng là tìm và hiển thị pid của tất cả các tiến trình java đang ở trạng thái running trong hệ thống.\
 ![alt text](/doc/figure/jps.png) 
 2. **jstat**: [Java Virtual Machine Statistics Monitoring Tool](https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html)
+    Jstat là công cụ dùng để thống kê các perfomence data của JVM. Sử dụng:
+    ```
+    jstat [ generalOption | outputOptions vmid [interval[s|ms] [count]] ]
+    ```
+    Ví dụ: Ta sẽ sử dụng jstart để xem các thông số của jvm "Hello" bằng các bước sau:\
+    Bước 1: Sử dụng **jps** để xem pid của jvm Hello
+    ```
+    root@ri-hp6200:~# jps
+    10707 Jps
+    8267 JConsole
+    8207 Hello
+    root@ri-hp6200:~# 
+    ```
+    Bước 2: Biết được pid của Hello là 8207, Tiếp theo sử dụng jstat để lấy các thông số.
+    ```
+    jstat -gcutil 8207 250 7
+    ```
+    Lệnh trên sẽ kết nối với jvm Hello và thực hiện lấy mẫu mỗi 250ms 1 lần và lấy 7 mẫu trước khi kết thúc.
+    ```
+     S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   
+    20.94   0.00  39.35   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+    20.94   0.00  39.35   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+    20.94   0.00  39.35   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+    20.94   0.00  39.35   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+    20.94   0.00  39.35   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+    20.94   0.00  39.35   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+    20.94   0.00  40.08   0.01  93.89  84.87      2    0.007     0    0.000    0.007
+
+    ```
+    Trong đó:`
+    * S0, S1, E, 0, M, CSS: Lần lượt là thông năng sử dụng hiện tại của Survivor space 0, 1, Eden space, Old space, Metaspace & Compressed Class Space (Thuộc Perm Space) tính theo %.
+    * YGC: Số lần diễn ra GC ở Young Generation. (Minor GC) 
+    * YGCT - Young generation garbage collection time: Thời giang diễn ra Minor GC. 
+    * FGC: Số lẫn full GC.
+    * GCT: Tổng thời gian diễn ra GC.
+
+    Để thấy rõ hơn hoạt động GC, ta xem ví dụ sao (trích: [Oracle Doc](https://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html))
+    
+    ```
+    S0     S1     E      O      P     YGC    YGCT    FGC    FGCT     GCT
+
+    12.44   0.00  27.20   9.49  96.70    78    0.176     5    0.495    0.672
+
+    12.44   0.00  62.16   9.49  96.70    78    0.176     5    0.495    0.672
+
+    12.44   0.00  83.97   9.49  96.70    78    0.176     5    0.495    0.672
+
+     0.00   7.74   0.00   9.51  96.70    79    0.177     5    0.495    0.673
+
+     0.00   7.74  23.37   9.51  96.70    79    0.177     5    0.495    0.673
+
+     0.00   7.74  43.82   9.51  96.70    79    0.177     5    0.495    0.673
+
+     0.00   7.74  58.11   9.51  96.71    79    0.177     5    0.495    0.673
+    
+    ```
+
+    Có thể thấy rằng quá trình Minor GC diễn ra giữa mẫu thứ 3 và thứ 4. Thời gian GC là 0.001 giây. GC chuyển Obj từ E sang O, (E từ 83.97% về 0, O từ 9.49% lên 9.52%). Survivor Space trước khi GC sử dụng hết 12.44%, sau khi GC còn 7.74%.
+
+    Ngoài ra còn nhiều generalOption khác như -gc, -gccapacity, gccause, gcnew, gcnewcapacity,... Nhưng được sử dụng nhiều nhất là -gc & -gcutil.
+    
+
 3. **jconsole**: Jconsole là phần mềm quản lí và theo dõi jvm có giao diện đồ họa. Jconsole hỗ trợ cả JMX lẫn MBean, nhờ đó Jconsole có thể theo dỗi nhiều jvm cùng một lúc. Hơn nữa, nhiều Session của Jconsole có thể cùng theo dõi một session của một JVM. Các thông số Jconsole có thể theo dõi:
 * Memory usage by memory pool/spaces
 * Garbage collection
