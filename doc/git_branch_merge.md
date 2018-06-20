@@ -72,6 +72,16 @@ Trong trường hợp này, Git thực hiện một tích hợp 3 chiều, sử 
     - _git branch -d_: Khi xóa các branch chưa được merge vào nhánh hiện tại bằng lệnh này thì hệ thống sẽ báo lỗi và không cho xóa. Nếu thực sự muốn xóa & chấp nhận mất đi các thay đổi thì dùng tham số _-D_
     
 
-
-
-
+8. Đẩy nhánh lên remote: _git push (remote) (branch)_
+```
+$ git push origin serverfix
+$ git push origin serverfix:serverfix
+```
+9. Clone một nhánh ở remote về và tạo ra phiên bản local để làm việc trên đó:
+```
+git checkout -b serverfix origin/serverfix
+```
+10. Xóa nhánh ở remote: 
+```
+$ git push origin :serverfix
+```
