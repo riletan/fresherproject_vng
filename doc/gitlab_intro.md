@@ -22,6 +22,7 @@ Nguồn: [hoclaptrinh.vn](https://hoclaptrinh.vn) ; [viblo.asia](https://viblo.a
     * Để bảo mật một branch, user cần có ít nhất một quyền cho phép từ master branch.
 - Review Apps (Từ gitlab 8.14) cho phép kiểm thử và demo tính năng mới.
 - Quản lý users, groups, permissions: Có 5 mức user permissions là Guest, Reporter, Developer, Maintainer, Owner. Chi tiết xem thêm ở [https://docs.gitlab.com](https://docs.gitlab.com/ee/user/permissions.html)
+- Continuous Integration (CI), Continuous Deployment (CD) 
 - Quản lý project visibility: có 3 kiểu project: Private, Internal, và Public.
 ## <span style="color:blue"> Kiến trúc của Gitlab </span>
 ![alt text](/doc/figure/gitlab2.png)
